@@ -29,7 +29,7 @@
       },
       "contractNativeMinterConfig": {
         "blockTimestamp": 0,
-        "adminAddresses": ["0x50b65c1e3206621b6f9a5ab2950ae69f20634b82"]
+        "adminAddresses": ["0x310bc061214ee89af5cfb28a6ebf96c5436fa3cd"]
       },
       "txAllowListConfig": {
         "blockTimestamp": null,
@@ -37,7 +37,7 @@
       },
       "feeManagerConfig": {
         "blockTimestamp": 0,
-        "adminAddresses": ["0x50b65c1e3206621b6f9a5ab2950ae69f20634b82"]
+        "adminAddresses": ["0x310bc061214ee89af5cfb28a6ebf96c5436fa3cd"]
       }
     },
     "nonce": "0x0",
@@ -48,7 +48,7 @@
     "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "coinbase": "0x0000000000000000000000000000000000000000",
     "alloc": {
-      "50b65c1e3206621b6f9a5ab2950ae69f20634b82": {
+      "310bc061214ee89af5cfb28a6ebf96c5436fa3cd": {
         "balance": "0x33b2e3c9fd0803ce8000000"
       }
     },
@@ -60,3 +60,5 @@
     "baseFeePerGas": null
   }
   
+
+  DOS Chain
