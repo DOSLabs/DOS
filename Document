@@ -1,21 +1,56 @@
-# DOS Chain
-We are working on a subnet of Avalanche network.
+Docs: https://docs.avax.network/community/tutorials-contest/2022/avax-subnet-customization
 
-# Custom Subnet Config
+Định nghĩa: 
+ChainId: Mã định danh duy nhất trong subnet.
+Token Symbol: Ký hiệu của mã thông báo gốc được sử dụng trong subnet.
+Gas Configuration: Xác định cấu hình gas của subnet. Thông lượng giao dịch nhiều hơn có nghĩa là sử dụng nhiều dung lượng bộ nhớ hơn. C-chain default fees: 
+> Low disk use    / Low Throughput    1.5 mil gas/s (C-Chain's setting)
+Airdropping Native Tokens: Xác định cách phân phối token trong subnet. Có thể chọn địa chỉ và số tiền muốn phân phối:
+Adding a Custom Precompile to Modify the Evm: Thiết lập trình biên dịch trước tuỳ chỉnh để mở khoá 1 số chức năng hữu ích như sau:
 
-## Precompiles
+Native Minting: Cho phép quản trị viên cho phép các hợp đồng được chỉ định đúc native token cho subnet. Chi tiết trong contractNativeMinterConfig.
+Configure Contract Deployment Whitelist: Hạn chế những ai có khả năng các hợp đồng con trên subnet. Chi tiết trong contractDeployerAllowListConfig.
+Configure Transaction Allow List: Hạn chế những ai có khả năng thực hiện giao dịch trên Subnet. Chi tiết trong txAllowListConfig.
 
-### Activate/Deactivate Precompile contracts
-
+Config
+ChainId
+Hardforks: eip150Block, eip150Hash, eip155Block, eip158Block, byzantiumBlock, constantinopleBlock, petersburgBlock, istanbulBlock, muirGlacierBlock, SubnetEVMTimestamp. Full list : https://github.com/ethereum/execution-specs#ethereum-protocol-releases
+When there is a new protocol release, to activate that protocol on your Subnet, you can add the configuration for the new protocol to the genesis file and point it to a block number in the future as the activation block number.
+Fee Config​
+gasLimit
+targetBlockRate
+minBaseFee
+targetGas
+baseFeeChangeDenominator
+minBlockGasCost
+maxBlockGasCost
+blockGasCostStep
+Validator Fee Recipient
+Precompiles
+contractDeployerAllowListConfig
+contractNativeMinterConfig
+txAllowListConfig
+Genesis Block
+nonce
+timestamp
+extraData
+gasLimit
+difficulty
+mixHash
+coinbase
+parentHash
+gasUsed
+number
+airdropHash baseFeePerGas airdropAmount
+Native Token Allocation
+================================================================
+Custom subnet config
+Precompiles
+Activate/Deactivate Precompile contracts
 Để enable/disable precompiles cần phải chỉnh sửa trong file network upgrade ở thư mục:
-
-> .avalanchego/configs/chains/{blockchainID}/upgrade.json
-
-Lưu ý: File upgrade.json nằm ở mỗi validator và cần phải đồng bộ file này ở các validator trong subnet. Nếu có 1 validator nào đó không đồng bộ kịp thời, sẽ dẫn đến việc validator đó sẽ validate sai và bị trừ AVAX đã stack. (BlockchainId của DOS testnet là: `2vN6S9FFoL7NZxLmjWs6SfYJrBUFiX3E9m97z5Nc9uWdX8etTW` )
-
+.avalanchego/configs/chains/{blockchainID}/upgrade.json
+Lưu ý: File upgrade.json nằm ở mỗi validator và cần phải đồng bộ file này ở các validator trong subnet. Nếu có 1 validator nào đó không đồng bộ kịp thời, sẽ dẫn đến việc validator đó sẽ validate sai và bị trừ AVAX đã stack. (BlockchainId của DOS testnet là: 2vN6S9FFoL7NZxLmjWs6SfYJrBUFiX3E9m97z5Nc9uWdX8etTW )
 Ví dụ về phần enable precompile trong file upgrade.json:
-
-```json
 {
   "precompileUpgrades": [
     {
@@ -26,11 +61,7 @@ Ví dụ về phần enable precompile trong file upgrade.json:
     }
   ]
 }
-```
-
 Ví dụ về phần disable precompile trong file upgrade.json:
-
-```json
 {
   "precompileUpgrades": [
     {
@@ -41,17 +72,10 @@ Ví dụ về phần disable precompile trong file upgrade.json:
     }
   ]
 }
-```
-
-Lưu ý: Khi sửa đổi `precompileUpgrades` chỉ được thêm tiếp vào và mỗi item trong `precompileUpgrades` chỉ khai báo duy nhất cho một precompile và các item phải được sắp xếp theo property `blockTimestamp` tăng dần.
-
-### Restricting Smart Contract Deployers
-
+Lưu ý: Khi sửa đổi precompileUpgrades chỉ được thêm tiếp vào và mỗi item trong precompileUpgrades chỉ khai báo duy nhất cho một precompile và các item phải được sắp xếp theo property blockTimestamp tăng dần.
+Restricting Smart Contract Deployers
 Đây là precompile cho phép giới hạn địa chỉ ví được quyền deploy contract trên subnet.
-
 Ví dụ trong file upgrade.json:
-
-```json
 {
   "precompileUpgrades": [
     {
@@ -62,13 +86,8 @@ Ví dụ trong file upgrade.json:
     }
   ]
 }
-```
-
 Sau khi precompile được kích hoạt. Địa chỉ ví admin có thể thực hiện thêm hoặc bỏ một địa chỉ ví nào đó có quyền được deploy contract trên subnet. (Ví admin có quyền deploy contract mà không cần phải thêm)
-
 Contract để thực hiện thêm/bỏ quyền cho một ví:
-
-```javascript
 // (c) 2022-2023, Ava Labs, Inc. All rights reserved.
 // See the file LICENSE for licensing terms.
 
@@ -89,17 +108,10 @@ interface AllowListInterface {
     // Read the status of [addr]
     function readAllowList(address addr) external view returns (uint256);
 }
-```
-
-Sử dụng contract này ở địa chỉ `0x0200000000000000000000000000000000000000` dùng với ví admin để thực hiện.
-
-### Restricting Who Can Submit Transactions
-
+Sử dụng contract này ở địa chỉ 0x0200000000000000000000000000000000000000 dùng với ví admin để thực hiện.
+Restricting Who Can Submit Transactions
 Đây là precompile cho phép giới hạn địa chỉ đựa thực hiện trasaction trên subnet
-
 Ví dụ trong file upgrade.json:
-
-```json
 {
   "precompileUpgrades": [
     {
@@ -110,13 +122,8 @@ Ví dụ trong file upgrade.json:
     }
   ]
 }
-```
-
 Sau khi precompile được kích hoạt. Địa chỉ ví admin có thể thực hiện thêm hoặc bỏ một địa chỉ ví nào đó có quyền được thực hiện transaction trên subnet. (Ví admin có quyền thực hiện tx mà không cần phải thêm)
-
 Contract để thực hiện thêm/bỏ quyền cho một ví:
-
-```javascript
 // (c) 2022-2023, Ava Labs, Inc. All rights reserved.
 // See the file LICENSE for licensing terms.
 
@@ -137,17 +144,10 @@ interface AllowListInterface {
     // Read the status of [addr]
     function readAllowList(address addr) external view returns (uint256);
 }
-```
-
-Sử dụng contract này ở địa chỉ `0x0200000000000000000000000000000000000002` dùng với ví admin để thực hiện.
-
-### Minting Native Coins
-
+Sử dụng contract này ở địa chỉ 0x0200000000000000000000000000000000000002 dùng với ví admin để thực hiện.
+Minting Native Coins
 Đây là precompile cho phép địa chỉ ví admin được mint thêm native token. (Native token đã được mint 1 lần lúc deploy contract. Sau đó sẽ không được mint thêm cho đến khi precompile này được kích hoạt. Sau khi mint xong có thể disable precompile này lại để không cho phép mint nữa.)
-
 Ví dụ trong file upgrade.json:
-
-```json
 {
   "precompileUpgrades": [
     {
@@ -158,13 +158,8 @@ Ví dụ trong file upgrade.json:
     }
   ]
 }
-```
-
-Sau khi active precompile này, địa chỉ ví admin có quyền mint thêm native token cho một ví chỉ định. Bên cạnh đó, admin còn có thể set role `Admin` hoặc `Minter` cho một ví bất kì khác.
-
+Sau khi active precompile này, địa chỉ ví admin có quyền mint thêm native token cho một ví chỉ định. Bên cạnh đó, admin còn có thể set role Admin hoặc Minter cho một ví bất kì khác.
 Contract để thực hiện mint native token hoặc set role:
-
-```javascript
 // (c) 2022-2023, Ava Labs, Inc. All rights reserved.
 // See the file LICENSE for licensing terms.
 
@@ -188,17 +183,10 @@ interface NativeMinterInterface {
     // Mint [amount] number of native coins and send to [addr]
     function mintNativeCoin(address addr, uint256 amount) external;
 }
-```
-
-Sử dụng contract này ở địa chỉ `0x0200000000000000000000000000000000000001` dùng với ví admin để thực hiện.
-
-### Configuring Dynamic Fees
-
+Sử dụng contract này ở địa chỉ 0x0200000000000000000000000000000000000001 dùng với ví admin để thực hiện.
+Configuring Dynamic Fees
 Đây là precompile cho phép admin điều chỉnh các thông số liên quan đến gas price của mỗi transaction.
-
 Ví dụ trong file upgrade.json:
-
-```json
 {
   "precompileUpgrades": [
     {
@@ -209,13 +197,8 @@ Ví dụ trong file upgrade.json:
     }
   ]
 }
-```
-
 Sau khi active precompile này, địa chỉ ví admin có quyền thay đổi các thông số liên quan đến gas price của transaction.
-
 Contract để thực hiện thay đổi thông số dynamic gas fee:
-
-```javascript
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 import "./IAllowList.sol";
@@ -251,25 +234,30 @@ interface IFeeManager is IAllowList {
   // Get the last block number changed the fee config from the contract storage
   function getFeeConfigLastChangedAt() external view returns (uint256 blockNumber);
 }
-```
-
-Sử dụng contract này ở địa chỉ `0x0200000000000000000000000000000000000003` dùng với ví admin để thực hiện.
-
-- Giải thích các thông số:
-  - `gasLimit` : Số lượng gas lớn nhất mà 1 block được tiêu thụ.
-  - `targetBlockRate` : Số lượng block sinh ra trong một giây.
-  - `minBaseFee` : Lượng gas ít nhất mà một transaction cần phải trả. Nó bằng với phí gas cho một tx chuyển native token.
-  - `targetGas` : Lượng gas một block tiêu thụ tiêu chuẩn. Nếu block tiêu thụ nhiều hơn thì thuật toán dynamic fee sẽ điều chỉnh cho baseFee tăng lên và ngược lại.
-  - `baseFeeChangeDenominator` : Mấu số của độ thay đổi của base fee. Độ thay đổi trên được tính là độ lệch của lượng gas hướng đến và lượng gas sử dụng thực tế rồi chia cho mẫu số trên. Nên mấu số trên càng lớn sẽ làm cho sự thay đổi base fee càng ít (chậm) và ngược lại.
-  - `minBlockGasCost` : Lượng gas tối thiểu để sinh ra một block mới.
-  - `maxBlockGasCost` : Lượng gas tối đa để sinh ra một block mới.
-  - `blockGasCostStep` : Độ tăng/giảm của lượng gas dùng để sinh ra một block mới. Việc tăng/giảm này phụ thuộc và số giây nhanh/chậm hơn của blockRate hiện tại so với `targetBlockRate` đã khai báo ở trên với công thức : `(blockRate - targetBlockRate) * blockGasCostStep`.
-
-## Config Genesis file
-
-### DOS Testnet Genesis file:
-
-```json
+Sử dụng contract này ở địa chỉ 0x0200000000000000000000000000000000000003 dùng với ví admin để thực hiện.
+Giải thích các thông số:
+gasLimit : Số lượng gas lớn nhất mà 1 block được tiêu thụ.
+targetBlockRate : Số lượng block sinh ra trong một giây.
+minBaseFee : Lượng gas ít nhất mà một transaction cần phải trả. Nó bằng với phí gas cho một tx chuyển native token.
+targetGas : Lượng gas một block tiêu thụ tiêu chuẩn. Nếu block tiêu thụ nhiều hơn thì thuật toán dynamic fee sẽ điều chỉnh cho baseFee tăng lên và ngược lại.
+baseFeeChangeDenominator : Mấu số của độ thay đổi của base fee. Độ thay đổi trên được tính là độ lệch của lượng gas hướng đến và lượng gas sử dụng thực tế rồi chia cho mẫu số trên. Nên mấu số trên càng lớn sẽ làm cho sự thay đổi base fee càng ít (chậm) và ngược lại.
+minBlockGasCost : Lượng gas tối thiểu để sinh ra một block mới.
+maxBlockGasCost : Lượng gas tối đa để sinh ra một block mới.
+blockGasCostStep : Độ tăng/giảm của lượng gas dùng để sinh ra một block mới. Việc tăng/giảm này phụ thuộc và số giây nhanh/chậm hơn của blockRate hiện tại so với targetBlockRate đã khai báo ở trên với công thức : (blockRate - targetBlockRate) * blockGasCostStep.
+Config Fee:
+Các thông số ở trường config.feeConfig tương ứng với các thông số đã giới thiệu ở phần trên. Có thể điều chỉnh ngay ở file genesis trước khi deploy subnet hoặc chỉnh sửa sau như hướng dẫn phía trên.
+Config config.allowFeeRecipients:
+Đây là config cho phép validator có được đăng kí địa chỉ nhận phí gas của validator. Có 2 option ở trường này:
+true: Cho phép validator config địa chỉ nhận phí gas của validator. Nếu không config thì số phí gas đó sẽ bị burn.
+false: Tất cả phí gas của subnet sẽ bị burn toàn bộ về địa chỉ 0x0100000000000000000000000000000000000000 (Như config của C chain)
+Config các precompile:
+Các precompile có thể config ở file genesis bao gồm:
+contractDeployerAllowListConfig
+contractNativeMinterConfig
+txAllowListConfig
+feeManagerConfig
+Các precompile có thể mở hoặc tắt cũng như config địa chỉ được tương tác với các precompile ở file genesis.
+DOS Testnet Genesis file:
 {
   "config": {
     "chainId": 1311,
@@ -331,26 +319,73 @@ Sử dụng contract này ở địa chỉ `0x0200000000000000000000000000000000
   "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
   "baseFeePerGas": null
 }
-```
 
-### Config Fee:
 
-Các thông số ở trường `config.feeConfig` tương ứng với các thông số đã giới thiệu ở phần trên. Có thể điều chỉnh ngay ở file genesis trước khi deploy subnet hoặc chỉnh sửa sau như hướng dẫn phía trên.
 
-### Config `config.allowFeeRecipients`:
 
-Đây là config cho phép validator có được đăng kí địa chỉ nhận phí gas của validator. Có 2 option ở trường này:
 
-- true: Cho phép validator config địa chỉ nhận phí gas của validator. Nếu không config thì số phí gas đó sẽ bị burn.
-- false: Tất cả phí gas của subnet sẽ bị burn toàn bộ về địa chỉ `0x0100000000000000000000000000000000000000` (Như config của C chain)
 
-### Config các precompile:
+DOS Mainnet Genesis file:
 
-Các precompile có thể config ở file genesis bao gồm:
 
-- `contractDeployerAllowListConfig`
-- `contractNativeMinterConfig`
-- `txAllowListConfig`
-- `feeManagerConfig`
-
-Các precompile có thể mở hoặc tắt cũng như config địa chỉ được tương tác với các precompile ở file genesis.
+  {
+  "config": {
+    "chainId": 3,
+    "homesteadBlock": 0,
+    "eip150Block": 0,
+    "eip150Hash": "0x2086799aeebeae135c246c65021c82b4e15a2c451340993aacfd2751886514f0",
+    "eip155Block": 0,
+    "eip158Block": 0,
+    "byzantiumBlock": 0,
+    "constantinopleBlock": 0,
+    "petersburgBlock": 0,
+    "istanbulBlock": 0,
+    "muirGlacierBlock": 0,
+    "subnetEVMTimestamp": 0,
+    "feeConfig": {
+      "gasLimit": 8000000,
+      "targetBlockRate": 2,
+      "minBaseFee": 25000000000,
+      "targetGas": 15000000,
+      "baseFeeChangeDenominator": 36,
+      "minBlockGasCost": 0,
+      "maxBlockGasCost": 1000000,
+      "blockGasCostStep": 200000
+    },
+    "allowFeeRecipients": true,
+    "contractDeployerAllowListConfig": {
+      "blockTimestamp": null,
+      "adminAddresses": null
+    },
+    "contractNativeMinterConfig": {
+      "blockTimestamp": 0,
+      "adminAddresses": ["DIACHIVIADMIN"]
+    },
+    "txAllowListConfig": {
+      "blockTimestamp": null,
+      "adminAddresses": null
+    },
+    "feeManagerConfig": {
+      "blockTimestamp": 0,
+      "adminAddresses": ["DIACHIVIADMIN"]
+    }
+  },
+  "nonce": "0x0",
+  "timestamp": "0x0",
+  "extraData": "0x",
+  "gasLimit": "0x7a1200",
+  "difficulty": "0x0",
+  "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "coinbase": "0x0000000000000000000000000000000000000000",
+  "alloc": {
+    "DIACHIVIADMIN": {
+      "balance": "0x33b2e3c9fd0803ce8000000"
+    }
+  },
+  "airdropHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "airdropAmount": null,
+  "number": "0x0",
+  "gasUsed": "0x0",
+  "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "baseFeePerGas": null
+}
