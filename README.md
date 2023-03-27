@@ -52,7 +52,7 @@ Native support for easily creating and trading digital smart assets (NFT) with c
 | Sybil Protection            |   Proof of Work  |  Proof of Stake | Proof of Stake |   Proof of Stake  |
 | Safety Threshold            |        51%       |       51%       |                | 80% parameterized |
 | Zero Gas Fee                |        No        |        No       |       No       |        Yes        |
-|                             |                  |                 |                |                   |
+
 
 ## Future Goal
 
