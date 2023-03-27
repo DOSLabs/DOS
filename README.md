@@ -9,7 +9,7 @@ https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/6874
 )](https://docs.doschain.com)
 [![Discord](https://img.shields.io/badge/discord-join%20chat-blue.svg)](https://discord.gg/DOS)
 
-## DOS Chain
+## Native Token - DOS
 
 DOS stands for "Decentralized Operating System" and is the native token of DOS Chain. It’s a hard-capped, scarce asset that is used to pay for fees, provide a basic unit of account between the multiple games created on DOS Chain and acts as a governance token. Holding DOS gives you the right to make your voice heard and is necessary for participation in DOS Chain's decentralized on-chain governance.
 
