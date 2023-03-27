@@ -1,10 +1,13 @@
-# DOS Chain
-
 ## Introduction[​](https://docs.avax.network/#introduction)
 
 [DOS Chain](https://doschain.com) is a dedicated blockchain for gaming that leverages the existing infrastructure and security of the [Avalanche Network](https://www.avax.network/). We are bringing a platform for launching Web3 games and entertainment blockchain deployments in one interoperable, zero gas fee, user-friendly, highly scalable ecosystem with near-instant transaction finality.
 
 Players can have the best gaming experience without worring about complicated Web3 processes and security. Game developers can quickly build on DOS as easy as they develop Web2 games.
+
+[![API Reference](
+https://camo.githubusercontent.com/915b7be44ada53c290eb157634330494ebe3e30a/68747470733a2f2f676f646f632e6f72672f6769746875622e636f6d2f676f6c616e672f6764646f3f7374617475732e737667
+)](https://docs.doschain.com)
+[![Discord](https://img.shields.io/badge/discord-join%20chat-blue.svg)](https://discord.gg/DOS)
 
 ## DOS Chain
 
