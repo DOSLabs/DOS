@@ -1,11 +1,4 @@
 # DOS Chain
----
-title: Overview
-slug: Dkv4-overview
-description: DOS Overview
-createdAt: 2022-12-13T16:27:51.000Z
-updatedAt: 2023-03-20T22:50:59.000Z
----
 
 ## Introduction[​](https://docs.avax.network/#introduction)
 
